@@ -23,11 +23,11 @@ The core of this project is centered on **human transcription factors (TFs)**, s
    
 3. **Alignment Algorithm:** We’ve come up with a novel algorithm ✨ to align subsequent sequences alongside the top seed motif. This helps us identify the **anchor residues**—those key positions in the motifs that play a big role in gene regulation.
 
-## 🧩 Why Anchor Residues Matter
+## Why Anchor Residues Matter
 
 Anchor residues are like the keystones 🗝️ of the transcription factor-DNA interaction. By identifying these, we can begin to understand how certain genes are turned on or off. And guess what? This opens up exciting possibilities in **drug design**, as we could potentially **target these residues** to modulate gene expression in diseases!
 
-## 🛠️ Tools & Methods
+## Tools & Methods
 
 - **UniProbe Data**: Our data source for TFBS.
 - **MEME Suite**: Command-line interface for motif identification.
@@ -38,14 +38,14 @@ Anchor residues are like the keystones 🗝️ of the transcription factor-DNA i
 
 Remember, the alignment algorithm we were talking about? This alignment step could revolutionize how we approach drug design by offering more robust insights into TFBS. We’re really excited about how this could **transform the field**!
 
-## 💡 Key Contributions
+## Key Contributions
 
 - A **systematic approach** to TFBS analysis, backed by high-quality data and computational tools.
 - Identification of **anchor residues** that could be targeted for **gene modulation**.
-- A novel **binning strategy** to highlight motif prevalence, improving the accuracy of our findings.
-- Development of an **algorithm** that aligns datasets for broader applications.
+- A novel **binning strategy** to generate the seed (top sequence)
+- Development of an **algorithm** that aligns datasets alongside this seed for broader applications.
 
-## 📊 What to Expect
+## What to Expect
 
 At the end of this project, we'll present:
 - A **comprehensive report** on our methodology and findings.
@@ -60,4 +60,4 @@ Stay tuned for more updates! 🌟
 
 ---
 
-Feel free to dive into our code and analysis, and don't hesitate to reach out if you have any questions. Let's advance the field of **drug design** together! 💊
+Feel free to dive into our code and analysis, and don't hesitate to reach out if you have any questions. Let's advance the field of **drug design** together!
