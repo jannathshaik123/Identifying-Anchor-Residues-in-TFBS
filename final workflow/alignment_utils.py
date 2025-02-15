@@ -11,58 +11,46 @@ def generate_sorted_substrings(s):
     return unique_substrings
 
 def align_sequence(sequence_info):
-    sequence, reference_sequence, substrings, ref_index = sequence_info
-    max_length = len(sequence[0])
+    sequence, reference_sequence, substrings = sequence_info
+    max_length = len(sequence)
     lower_bound = 1 - max_length
     upper_bound = 2 * max_length - 1
     columns = [i for i in range(lower_bound, upper_bound)]
-    df = pd.DataFrame(columns=columns)
+    df = pd.DataFrame('-', index=[0], columns=columns)
 
-    aligned = False
-    if reference_sequence in sequence:
-        idx = sequence.find(reference_sequence)
-        aligned = True
-        entire = True
-    else:
-        prev_best_number_of_matches = 0
-        best_substring_index = -1
+    best_substring_index = -1
+    prev_best_number_of_matches = 0
+    best_offset = 0
 
-        # Add tqdm for progress tracking in the inner loop
-        for i in tqdm(range(len(substrings)), desc="Finding best substring match"):
-            total_number_of_matches = 0
-            
-            if substrings[i] in sequence:
-                current_substring = substrings[i]
-                idx = sequence.find(current_substring)
-                substring_index_in_seed = reference_sequence.find(current_substring)
-                offset = substring_index_in_seed - idx
+    # Iterate over substrings to find the best alignment
+    for i in tqdm(range(len(substrings)), desc="Finding best substring match"):
+        if substrings[i] in sequence:
+            current_substring = substrings[i]
+            idx = sequence.find(current_substring)
+            substring_index_in_seed = reference_sequence.find(current_substring)
+            offset = substring_index_in_seed - idx
 
-                if offset < 0:
-                    aligned_seed = reference_sequence[:len(reference_sequence) - abs(offset)]
-                    aligned_sequence = sequence[abs(offset):]
-                else:
-                    aligned_seed = reference_sequence[abs(offset):]
-                    aligned_sequence = sequence[:len(sequence) - abs(offset)]
+            aligned_seed = reference_sequence[max(0, offset):]
+            aligned_sequence = sequence[max(0, -offset):]
 
-                min_length = min(len(aligned_seed), len(aligned_sequence))
-                total_number_of_matches = sum(1 for i in range(min_length) if aligned_seed[i] == aligned_sequence[i])
+            min_length = min(len(aligned_seed), len(aligned_sequence))
+            total_number_of_matches = sum(1 for j in range(min_length) if aligned_seed[j] == aligned_sequence[j])
 
-                if prev_best_number_of_matches < total_number_of_matches:
-                    best_substring_index = i
-                    prev_best_number_of_matches = total_number_of_matches
-        
+            if total_number_of_matches > prev_best_number_of_matches:
+                prev_best_number_of_matches = total_number_of_matches
+                best_substring_index = i
+                best_offset = offset
+
+    if best_substring_index != -1:
         best_substring = substrings[best_substring_index]
         idx = sequence.find(best_substring)
         substring_index_in_seed = reference_sequence.find(best_substring)
-        aligned = True
-        entire = False
+        offset = best_offset
 
-    if aligned:
-        if entire:
-            offset = ref_index - idx
-        else:
-            offset = substring_index_in_seed - idx
+        # Place aligned data in the respective indices
         indices = range(offset, offset + len(sequence))
-        df = pd.DataFrame([list(sequence)], columns=indices)
-
+        for i, val in zip(indices, sequence):
+            if i in df.columns: 
+                df.at[0, i] = val
+        
     return df
