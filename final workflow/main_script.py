@@ -95,8 +95,7 @@ if __name__ == "__main__":
 
             # Write to a plain text file
             with open(output_file_path, 'w') as file:
-                file.write('Note that the reference sequence is: ' + reference_sequence + '\n\n')
-                file.write("Aligned Sequences:\n")
+                file.write(reference_sequence + '\n\n')
                 for line in formatted_data:
                     file.write(line + '\n')
 
