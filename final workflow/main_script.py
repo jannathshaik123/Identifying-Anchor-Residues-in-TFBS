@@ -4,6 +4,7 @@ from alignment_utils import generate_sorted_substrings, align_sequence
 from using_meme import meme_analysis
 from fasta_converter import fasta_format_converter
 from seed_finder import get_top_sequences, seed_meme_analysis, read_html_pwm, calculate_consensus
+import os
 
 def read_sequences_from_fasta_file(file_path, col_index):
     with open(file_path, 'r') as file:
@@ -53,17 +54,20 @@ def write_sequences_to_fasta(sequences, output_file):
        
 
 if __name__ == "__main__":
-    for TF in ['Jun_Fos']:
-        for col_index in [0,1]:
-            input_file_path = f'MonomerBinding/{TF}/{TF}.txt'
+    for TF in ['GATA4']:
+        for col_index in [0]:
+            input_file_path = f'TFs UniProbe Data/{TF}/{TF}_anti-GST_8mers_11111111.txt'
             sequences, scores = read_sequences_from_file(input_file_path, col_index)
             
             top_sequences = get_top_sequences(sequences, scores, top_n=20)        
             
-            output_file_path = f'MonomerBinding/{TF}/col_{col_index}/{TF}_consensus.txt'
-            output_fasta_path = f'MonomerBinding/{TF}/col_{col_index}/{TF}_consensus.fasta'
-
-            output_fasta_file = f'MonomerBinding/{TF}/col_{col_index}/{TF}_top_20_sequences.fasta'
+            
+            output_dir = f'MonomerBinding/{TF}/col_{col_index}'
+            os.makedirs(output_dir, exist_ok=True)
+            output_file_path = os.path.join(output_dir, f'{TF}_consensus.txt')
+            output_fasta_path = os.path.join(output_dir, f'{TF}_consensus.fasta')
+            output_fasta_file = os.path.join(output_dir, f'{TF}_top_20_sequences.fasta')
+            
             write_sequences_to_fasta(top_sequences, output_fasta_file)
             
             print("****************************************************************")
@@ -82,8 +86,7 @@ if __name__ == "__main__":
             df_aligned = align_sequences_parallel(sequences, reference_sequence)
 
             columns_to_extract = [col for col in range(length_of_sequence) if col in df_aligned.columns]
-            extracted_data = df_aligned[columns_to_extract]
-            extracted_data = extracted_data.fillna('-')
+            extracted_data = df_aligned[columns_to_extract].fillna('-')
 
             formatted_data = extracted_data.apply(lambda row: ''.join(row.astype(str)), axis=1)
 
