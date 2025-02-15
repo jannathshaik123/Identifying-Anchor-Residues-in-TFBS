@@ -37,8 +37,7 @@ def read_sequences_from_file(file_path, col_index):
 
 def align_sequences_parallel(sequences, reference_sequence):
     substrings = generate_sorted_substrings(reference_sequence)
-    ref_index = 0
-    tasks = [(seq, reference_sequence, substrings, ref_index) for seq in sequences]
+    tasks = [(seq, reference_sequence, substrings) for seq in sequences]
     
     with Pool(processes=cpu_count()) as pool:
         dfs = pool.map(align_sequence, tasks)
@@ -64,15 +63,16 @@ if __name__ == "__main__":
             
             output_dir = f'MonomerBinding/{TF}/col_{col_index}'
             os.makedirs(output_dir, exist_ok=True)
-            output_file_path = os.path.join(output_dir, f'{TF}_consensus.txt')
-            output_fasta_path = os.path.join(output_dir, f'{TF}_consensus.fasta')
             output_fasta_file = os.path.join(output_dir, f'{TF}_top_20_sequences.fasta')
+            
+            output_file_path = os.path.join(output_dir, f'{TF}_consensus.txt')
+            output_csv_path = os.path.join(output_dir, f'{TF}_consensus.csv')
+            output_fasta_path = os.path.join(output_dir, f'{TF}_consensus.fasta')
+
             
             write_sequences_to_fasta(top_sequences, output_fasta_file)
             
-            print("****************************************************************")
             seed_meme_analysis(output_fasta_file, col_index, 20)
-            print("****************************************************************")
             html_file = f'MonomerBinding/{TF}/col_{col_index}/Meme_of_top_20_Seeds/meme.html'
             pwm_section = read_html_pwm(html_file)
             reference_sequence = calculate_consensus(pwm_section)
@@ -84,17 +84,23 @@ if __name__ == "__main__":
                 raise ValueError(f"No sequence containing '{reference_sequence}' was found in the file.")
 
             df_aligned = align_sequences_parallel(sequences, reference_sequence)
-
+            
+            # Write to a csv file
+            df_aligned.to_csv(output_csv_path, index=False)
+            print(f"Data written to {output_csv_path}")
+            
             columns_to_extract = [col for col in range(length_of_sequence) if col in df_aligned.columns]
-            extracted_data = df_aligned[columns_to_extract].fillna('-')
-
+            extracted_data = df_aligned[columns_to_extract]
             formatted_data = extracted_data.apply(lambda row: ''.join(row.astype(str)), axis=1)
 
-            print("**** Output File ***")
+            # Write to a plain text file
             with open(output_file_path, 'w') as file:
-                file.write(reference_sequence + '\n')
+                file.write('Note that the reference sequence is: ' + reference_sequence + '\n\n')
+                file.write("Aligned Sequences:\n")
                 for line in formatted_data:
                     file.write(line + '\n')
+
+            print(f"Data written to {output_file_path}")
                     
             # sequence_logo_generator(TF,output_file_path,col_index)
             fasta_format_converter(output_file_path, output_fasta_path)
