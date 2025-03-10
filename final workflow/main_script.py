@@ -55,7 +55,7 @@ def write_sequences_to_fasta(sequences, output_file):
 if __name__ == "__main__":
     for TF in ['GATA4']:
         for col_index in [0]:
-            input_file_path = f'TFs UniProbe Data/{TF}/{TF}_anti-GST_8mers_11111111.txt'
+            input_file_path = f'TFs UniProbe Data/{TF}/{TF}_anti-GST_8mers_11111111.txt' #Edit this path
             sequences, scores = read_sequences_from_file(input_file_path, col_index)
             
             top_sequences = get_top_sequences(sequences, scores, top_n=20)        
@@ -63,17 +63,17 @@ if __name__ == "__main__":
             
             output_dir = f'MonomerBinding/{TF}/col_{col_index}'
             os.makedirs(output_dir, exist_ok=True)
-            output_fasta_file = os.path.join(output_dir, f'{TF}_top_20_sequences.fasta')
+            output_fasta_file = os.path.join(output_dir, f'{TF}_top_20_sequences.fasta')  #Edit this path
             
-            output_file_path = os.path.join(output_dir, f'{TF}_consensus.txt')
-            output_csv_path = os.path.join(output_dir, f'{TF}_consensus.csv')
-            output_fasta_path = os.path.join(output_dir, f'{TF}_consensus.fasta')
+            output_file_path = os.path.join(output_dir, f'{TF}_consensus.txt')  #Edit this path
+            output_csv_path = os.path.join(output_dir, f'{TF}_consensus.csv')  #Edit this path
+            output_fasta_path = os.path.join(output_dir, f'{TF}_consensus.fasta')  #Edit this path
 
             
             write_sequences_to_fasta(top_sequences, output_fasta_file)
             
             seed_meme_analysis(output_fasta_file, col_index, 20)
-            html_file = f'MonomerBinding/{TF}/col_{col_index}/Meme_of_top_20_Seeds/meme.html'
+            html_file = f'MonomerBinding/{TF}/col_{col_index}/Meme_of_top_20_Seeds/meme.html'  #Edit this path
             pwm_section = read_html_pwm(html_file)
             reference_sequence = calculate_consensus(pwm_section)
             
