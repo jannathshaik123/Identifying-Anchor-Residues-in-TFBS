@@ -12,7 +12,7 @@ def sequence_logo_generator(TF, file_path, col_index):
     logoformat = LogoFormat(logodata, logooptions)
     png_bytes = png_print_formatter(logodata, logoformat)
 
-    with open(f'/Users/bristi/Desktop/Design Project/Working-with-TF/DimerBinding/New_SeqLogos/seed2_{TF}_{col_index}.png', 'wb') as fout:
+    with open(f'Working-with-TF/DimerBinding/New_SeqLogos/seed2_{TF}_{col_index}.png', 'wb') as fout:  #Edit this path
         fout.write(png_bytes)
         
         
