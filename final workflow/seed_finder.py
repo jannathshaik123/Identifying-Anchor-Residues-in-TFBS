@@ -93,7 +93,7 @@ def read_html_pwm(file_path):
     return pwm_section
 
 
-html_file = "/Users/bristi/Desktop/Design Project/Working-with-TF/Finding_A_Seed/FOS_CEBPE/Meme_of_top_20_Seeds/meme.html"
+html_file = "/Users/bristi/Desktop/Design Project/Working-with-TF/Finding_A_Seed/FOS_CEBPE/Meme_of_top_20_Seeds/meme.html" #Path to your meme output file
 pwm_section = read_html_pwm(html_file)
 consensus_sequence = calculate_consensus(pwm_section)
 print(consensus_sequence)
